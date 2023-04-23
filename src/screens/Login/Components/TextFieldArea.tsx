@@ -8,6 +8,7 @@ interface TextFieldAreaProps {
   placeholderText: string;
   FieldIcon: React.ElementType<SvgProps>;
   isPassword: boolean;
+  onHandleInput: (input: string) => void;
 }
 
 const TextFieldArea = ({
@@ -15,7 +16,12 @@ const TextFieldArea = ({
   placeholderText,
   FieldIcon,
   isPassword,
+  onHandleInput,
 }: TextFieldAreaProps) => {
+  const onChangeHandler = (input: string) => {
+    onHandleInput(input);
+  };
+
   return (
     <View style={styles.fieldContainer}>
       <Text style={styles.fieldHeader}>{fieldHeader}</Text>
@@ -27,6 +33,7 @@ const TextFieldArea = ({
           underlineColorAndroid="transparent"
           placeholderTextColor={greyTheme}
           secureTextEntry={isPassword}
+          onChangeText={onChangeHandler}
         />
       </View>
     </View>
