@@ -8,11 +8,16 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {backgroundTheme, greenTheme, redTheme} from './../../assets/colors';
+import {
+  backgroundTheme,
+  greenTheme,
+  redTheme,
+  navigationTheme,
+} from './../../assets/colors';
 import Email from './../../assets/icons/Email';
 import Lock from './../../assets/icons/Lock';
 import TextFieldArea from './Components/TextFieldArea';
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import {
   clearUserToken,
   setUserToken,
@@ -20,6 +25,7 @@ import {
 } from '../../redux/reducers/authReducer';
 import {RootState, store} from '../../redux/store';
 import {useSelector} from 'react-redux';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Login = ({navigation}: any) => {
   //store.dispatch(clearUserToken()); //this is just here for ease of debugging, delete this later in production
@@ -27,7 +33,8 @@ const Login = ({navigation}: any) => {
 
   useEffect(() => {
     if (token) {
-      navigation.replace('Dashboard');
+      changeNavigationBarColor(navigationTheme, true);
+      navigation.replace('MainScreen');
     }
   }, [token, navigation]);
 
@@ -45,43 +52,79 @@ const Login = ({navigation}: any) => {
     setPassword(passwordInput);
   };
 
+  const checkEmptyField = () => {
+    if (email === '' || password === '') {
+      setWarningText('Field must not be empty');
+      return true;
+    }
+  };
+
+  const checkEmail = () => {
+    if (!email.endsWith('@binus.ac.id')) {
+      setWarningText('Email must end with @binus.ac.id');
+      return true;
+    }
+  };
+
+  const handleSetUserData = (res: AxiosResponse<any, any>) => {
+    const stationID = res.data.data.stationid;
+    const adminName = res.data.data.name;
+    const adminEmail = res.data.data.email;
+
+    axios
+      .get(`${process.env.BASE_URL}/api/v1/station/${stationID}`)
+      .then(stationRes => {
+        const stationName = stationRes.data.data[0].BuildingName;
+        store.dispatch(
+          setUserData({
+            name: adminName,
+            email: adminEmail,
+            station: stationName,
+          }),
+        );
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    setError(false);
+    setLoading(false);
+  };
+
+  const handleResponseError = (err: any) => {
+    if (err.code !== 'ECONNABORTED') {
+      setWarningText(err.response.data.error);
+    } else {
+      setWarningText('Server error, please try again later');
+    }
+    setError(true);
+    setLoading(false);
+  };
+
   const handleLogin = () => {
+    if (checkEmptyField() || checkEmail()) {
+      return;
+    }
+    //console.log(process.env.BASE_URL);
     setLoading(true);
     axios
-      .post(`${process.env.BASE_URL}/api/v1/admin/login`, {
-        email,
-        password,
-      })
+      .post(
+        `${process.env.BASE_URL}/api/v1/admin/login`,
+        {
+          email,
+          password,
+        },
+        {
+          timeout: 2000,
+        },
+      )
       .then(res => {
         store.dispatch(setUserToken(res.data.data.token));
 
-        const stationID = res.data.data.stationid;
-        const adminName = res.data.data.name;
-        const adminEmail = res.data.data.email;
-
-        axios
-          .get(`${process.env.BASE_URL}/api/v1/station/${stationID}`)
-          .then(stationRes => {
-            const stationName = stationRes.data.data[0].BuildingName;
-            store.dispatch(
-              setUserData({
-                name: adminName,
-                email: adminEmail,
-                station: stationName,
-              }),
-            );
-          })
-          .catch(err => {
-            console.log(err);
-          });
-
-        setError(false);
-        setLoading(false);
+        handleSetUserData(res);
       })
       .catch(err => {
-        setWarningText(err.response.data.error);
-        setError(true);
-        setLoading(false);
+        handleResponseError(err);
       });
   };
 
