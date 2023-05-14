@@ -29,7 +29,7 @@ import {useSelector} from 'react-redux';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Login = ({navigation}: any) => {
-  //store.dispatch(clearUserToken()); //this is just here for ease of debugging, delete this later in production
+  store.dispatch(clearUserToken()); //this is just here for ease of debugging, delete this later in production
   const token = useSelector((state: RootState) => state.auth.token);
 
   useEffect(() => {
@@ -179,7 +179,7 @@ const Login = ({navigation}: any) => {
           onHandleInput={handlePasswordTextChange}
         />
         <TouchableOpacity
-          style={isLoading ? styles.loginButtonDisabled : styles.loginButton}
+          style={styles.loginButton}
           onPress={handleLogin}
           disabled={isLoading}>
           {isLoading ? (
@@ -222,15 +222,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     color: 'black',
     fontSize: 24,
-  },
-  loginButtonDisabled: {
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '80%',
-    height: 45,
-    borderRadius: 8,
-    marginTop: 10,
   },
   loginButton: {
     backgroundColor: greenTheme,
