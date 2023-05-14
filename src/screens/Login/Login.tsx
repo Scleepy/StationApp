@@ -7,6 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
   ActivityIndicator,
+  Keyboard,
 } from 'react-native';
 import {
   backgroundTheme,
@@ -43,6 +44,7 @@ const Login = ({navigation}: any) => {
   const [warningText, setWarningText] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(false);
+  const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
   const handleEmailTextChange = (emailInput: string) => {
     setEmail(emailInput);
@@ -52,9 +54,31 @@ const Login = ({navigation}: any) => {
     setPassword(passwordInput);
   };
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardActive(true);
+      },
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardActive(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const checkEmptyField = () => {
     if (email === '' || password === '') {
       setWarningText('Field must not be empty');
+      setError(true);
       return true;
     }
   };
@@ -62,6 +86,7 @@ const Login = ({navigation}: any) => {
   const checkEmail = () => {
     if (!email.endsWith('@binus.ac.id')) {
       setWarningText('Email must end with @binus.ac.id');
+      setError(true);
       return true;
     }
   };
@@ -132,35 +157,37 @@ const Login = ({navigation}: any) => {
     <View style={styles.outerContainer}>
       <StatusBar backgroundColor={backgroundTheme} barStyle="dark-content" />
       <Image source={require('../../assets/Logo.png')} style={styles.logo} />
-      <View style={styles.loginContainerOuter}>
-        <View style={styles.loginContainerInner}>
-          <Text style={styles.textHeader}>Login</Text>
-          {isError && <Text style={styles.warningText}>{warningText}</Text>}
-          <TextFieldArea
-            fieldHeader={'Email'}
-            placeholderText={'User@binus.ac.id'}
-            FieldIcon={Email}
-            isPassword={false}
-            onHandleInput={handleEmailTextChange}
-          />
-          <TextFieldArea
-            fieldHeader={'Password'}
-            placeholderText={'Password'}
-            FieldIcon={Lock}
-            isPassword={true}
-            onHandleInput={handlePasswordTextChange}
-          />
-          <TouchableOpacity
-            style={isLoading ? styles.loginButtonDisabled : styles.loginButton}
-            onPress={handleLogin}
-            disabled={isLoading}>
-            {isLoading ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
-              <Text style={styles.loginButtonText}>Login</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+      <View
+        style={[
+          styles.loginContainer,
+          isKeyboardActive && styles.keyboardOnFocus,
+        ]}>
+        <Text style={styles.textHeader}>Login</Text>
+        {isError && <Text style={styles.warningText}>{warningText}</Text>}
+        <TextFieldArea
+          fieldHeader={'Email'}
+          placeholderText={'User@binus.ac.id'}
+          FieldIcon={Email}
+          isPassword={false}
+          onHandleInput={handleEmailTextChange}
+        />
+        <TextFieldArea
+          fieldHeader={'Password'}
+          placeholderText={'Password'}
+          FieldIcon={Lock}
+          isPassword={true}
+          onHandleInput={handlePasswordTextChange}
+        />
+        <TouchableOpacity
+          style={isLoading ? styles.loginButtonDisabled : styles.loginButton}
+          onPress={handleLogin}
+          disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.loginButtonText}>Login</Text>
+          )}
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -171,29 +198,23 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     backgroundColor: backgroundTheme,
   },
   logo: {
-    height: '15%',
+    height: '20%',
     width: undefined,
     aspectRatio: 1,
     borderRadius: 1000,
   },
-  loginContainerOuter: {
-    backgroundColor: 'white',
-    width: '85%',
-    height: '55%',
-    borderRadius: 12,
-    shadowColor: '#959da5',
-    shadowOpacity: 0.2,
-    elevation: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+  keyboardOnFocus: {
+    height: '65%',
+    marginTop: 0,
   },
-  loginContainerInner: {
-    width: '100%',
-    height: '80%',
+  loginContainer: {
+    marginTop: 20,
+    width: '95%',
+    height: '45%',
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
