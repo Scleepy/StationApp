@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -9,28 +9,73 @@ import {store, persistor} from './redux/store';
 import Login from './screens/Login/Login';
 import Dashboard from './screens/Dashboard/Dashboard';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {blackTheme, greyTheme} from './assets/colors';
+import HomeIcon from './assets/icons/HomeIcon';
+import HistoryIcon from './assets/icons/HistoryIcon';
+import History from './screens/History/History';
+import ProfileIcon from './assets/icons/ProfileIcon';
+import Profile from './screens/Profile/Profile';
 
 const Stack = createNativeStackNavigator();
 
 const MainScreen = ({navigation}: any) => {
   const Tab = createBottomTabNavigator();
 
+  const RenderHomeIcon = useCallback(({focused}: {focused: boolean}) => {
+    return <HomeIcon color={focused ? blackTheme : greyTheme} />;
+  }, []);
+
+  const RenderHistoryIcon = useCallback(({focused}: {focused: boolean}) => {
+    return <HistoryIcon color={focused ? blackTheme : greyTheme} />;
+  }, []);
+
+  const RenderProfileIcon = useCallback(({focused}: {focused: boolean}) => {
+    return <ProfileIcon color={focused ? blackTheme : greyTheme} />;
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
+          height: 65,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           backgroundColor: navigationTheme,
+          position: 'absolute',
         },
-        tabBarLabelStyle: {
-          display: 'none',
+        headerTitleStyle: {
+          fontSize: 20,
+          fontFamily: 'Poppins-SemiBold',
+          marginTop: 20,
+        },
+        headerStyle: {
+          backgroundColor: backgroundTheme,
+          elevation: 0,
         },
       }}>
       <Tab.Screen
         name="Dashboard"
         component={Dashboard}
-        options={{headerShown: false}}
+        options={{
+          tabBarIcon: RenderHomeIcon,
+          tabBarShowLabel: false,
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={History}
+        options={{
+          tabBarIcon: RenderHistoryIcon,
+          tabBarShowLabel: false,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: RenderProfileIcon,
+          tabBarShowLabel: false,
+        }}
       />
     </Tab.Navigator>
   );

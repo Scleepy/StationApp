@@ -1,32 +1,25 @@
 import React from 'react';
-import {Text, StyleSheet, View, StatusBar} from 'react-native';
+import {StyleSheet, View, StatusBar, ScrollView} from 'react-native';
 import {backgroundTheme} from './../../assets/colors';
-import {useSelector} from 'react-redux';
-import {RootState} from 'src/redux/store';
+import {AddPoints} from './components/AddPoints/AddPoints';
+import {Missions} from './components/Missions/Missions';
 
-const Dashboard = ({navigation}: any) => {
-  //for debugging purposes, delete later
-  // const token = useSelector((state: RootState) => state.auth.token);
-  // const name = useSelector((state: RootState) => state.auth.name);
-  // const email = useSelector((state: RootState) => state.auth.email);
-  // const station = useSelector((state: RootState) => state.auth.station);
-
-  // console.log(token, name, email, station);
-
+const Dashboard = () => {
   return (
     <View style={styles.outerContainer}>
       <StatusBar backgroundColor={backgroundTheme} barStyle="dark-content" />
-      <Text>Dashboard</Text>
+      <ScrollView>
+        <AddPoints />
+        <Missions />
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   outerContainer: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    flex: 1,
+    flexDirection: 'column',
     backgroundColor: backgroundTheme,
   },
 });

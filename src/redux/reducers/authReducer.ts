@@ -4,14 +4,14 @@ interface AuthState {
   name: string;
   email: string;
   station: string;
-  token: string | null;
+  Token: string | null;
 }
 
 const initialState: AuthState = {
   name: '',
   email: '',
   station: '',
-  token: null,
+  Token: null,
 };
 
 const authSlice = createSlice({
@@ -19,10 +19,10 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUserToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
+      state.Token = action.payload;
     },
     clearUserToken: state => {
-      state.token = null;
+      state.Token = null;
     },
     setUserData: (
       state,

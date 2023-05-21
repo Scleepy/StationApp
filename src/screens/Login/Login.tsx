@@ -29,9 +29,8 @@ import {useSelector} from 'react-redux';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Login = ({navigation}: any) => {
-  store.dispatch(clearUserToken()); //this is just here for ease of debugging, delete this later in production
-  const token = useSelector((state: RootState) => state.auth.token);
-
+  //store.dispatch(clearUserToken()); //this is just here for ease of debugging, delete this later in production
+  const token = useSelector((state: RootState) => state.auth.Token);
   useEffect(() => {
     if (token) {
       changeNavigationBarColor(navigationTheme, true);
@@ -92,9 +91,9 @@ const Login = ({navigation}: any) => {
   };
 
   const handleSetUserData = (res: AxiosResponse<any, any>) => {
-    const stationID = res.data.data.stationid;
-    const adminName = res.data.data.name;
-    const adminEmail = res.data.data.email;
+    const stationID = res.data.data.StationID;
+    const adminName = res.data.data.AdminName;
+    const adminEmail = res.data.data.AdminEmail;
 
     axios
       .get(`${process.env.BASE_URL}/api/v1/station/${stationID}`)
@@ -111,7 +110,6 @@ const Login = ({navigation}: any) => {
       .catch(err => {
         console.log(err);
       });
-
     setError(false);
     setLoading(false);
   };
@@ -130,7 +128,6 @@ const Login = ({navigation}: any) => {
     if (checkEmptyField() || checkEmail()) {
       return;
     }
-    //console.log(process.env.BASE_URL);
     setLoading(true);
     axios
       .post(
@@ -144,8 +141,7 @@ const Login = ({navigation}: any) => {
         },
       )
       .then(res => {
-        store.dispatch(setUserToken(res.data.data.token));
-
+        store.dispatch(setUserToken(res.data.data.Token));
         handleSetUserData(res);
       })
       .catch(err => {
