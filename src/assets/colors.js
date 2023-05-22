@@ -6,4 +6,5 @@ export const redTheme = '#F55353';
 export const greyTheme = '#B4BBB6';
 export const disabledTheme = '#ECF0FA';
 export const blackTheme = '#142625';
-export const shadowColor = '#959da5';
+export const shadowColorTheme = '#959da5';
+export const disabledGreenTheme = '#91B2AE';

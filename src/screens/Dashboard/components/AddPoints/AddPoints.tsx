@@ -7,7 +7,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {blackTheme, greenTheme, shadowColor} from '../../../../assets/colors';
+import {
+  blackTheme,
+  disabledGreenTheme,
+  greenTheme,
+  shadowColorTheme,
+} from '../../../../assets/colors';
 import {SearchBar} from './components/SearchBar';
 import {NameField} from './components/NameField';
 import {CategoryPicker} from './components/CategoryPicker';
@@ -16,21 +21,40 @@ import {WeightField} from './components/WeightField';
 export const AddPoints = () => {
   const [isLoading, setLoading] = useState(false);
   const [studentID, setStudentID] = useState('');
-  const [name, setName] = useState('');
-  const [categoryID, setCategoryID] = useState('');
-  const [weight, setWeight] = useState('');
+  const [studentName, setStudentName] = useState('');
+  const [categoryID, setCategoryID] = useState<string | null>(null);
+  const [weight, setWeight] = useState(0);
+  const [shouldClear, setShouldClear] = useState(false);
 
-  console.log(studentID);
-  console.log(name);
-  console.log(categoryID);
-  console.log(weight);
+  const isFieldEmpty =
+    studentID === '' ||
+    studentName === '' ||
+    categoryID === null ||
+    weight === 0;
 
-  const onHandleStudentIDInput = (inputText: string) => {
-    setStudentID(inputText);
+  const onHandleStudentIDInput = (inputID: string, inputName: string) => {
+    setStudentID(inputID);
+    setStudentName(inputName);
+  };
+
+  const onHandleWeightInput = (inputWeight: number) => {
+    setWeight(inputWeight);
+  };
+
+  const onHandleCategoryIDInput = (inputCategoryID: string | null) => {
+    setCategoryID(inputCategoryID);
+  };
+
+  const onClearFields = () => {
+    setShouldClear(false);
   };
 
   const sendRequest = () => {
-    setLoading(true);
+    setShouldClear(true);
+    setStudentName('');
+
+    //call axios here
+    //setLoading(true);
   };
 
   return (
@@ -38,16 +62,29 @@ export const AddPoints = () => {
       <Text style={styles.textHeader}>Add Points</Text>
       <View style={styles.addPointsBackground}>
         <View style={styles.addPointsInnerContainer}>
-          <SearchBar onHandleStudentIDInput={onHandleStudentIDInput} />
-          <NameField />
+          <SearchBar
+            onHandleStudentIDInput={onHandleStudentIDInput}
+            shouldClear={shouldClear}
+            onClearFields={onClearFields}
+          />
+          <NameField studentName={studentName} />
           <View style={styles.recycleDetail}>
-            <CategoryPicker />
-            <WeightField />
+            <CategoryPicker
+              onHandleCategoryIDInput={onHandleCategoryIDInput}
+              shouldClear={shouldClear}
+            />
+            <WeightField
+              onHandleWeightInput={onHandleWeightInput}
+              shouldClear={shouldClear}
+            />
           </View>
           <TouchableOpacity
-            style={styles.sendRequestButton}
+            style={[
+              styles.sendRequestButton,
+              isFieldEmpty && styles.disabledButton,
+            ]}
             onPress={sendRequest}
-            disabled={isLoading}>
+            disabled={isLoading || isFieldEmpty}>
             {isLoading ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
@@ -78,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     shadowOpacity: 0.2,
     elevation: 10,
-    shadowColor: shadowColor,
+    shadowColor: shadowColorTheme,
   },
   textHeader: {
     marginBottom: 5,
@@ -111,5 +148,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     height: '20%',
+  },
+  disabledButton: {
+    backgroundColor: disabledGreenTheme,
   },
 });

@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {
   blackTheme,
   greenTheme,
-  shadowColor,
+  shadowColorTheme,
 } from '../../../../../assets/colors';
 
 interface MissionData {
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     shadowOpacity: 0.2,
     elevation: 10,
-    shadowColor: shadowColor,
+    shadowColor: shadowColorTheme,
   },
   missionItemSide: {
     height: '100%',

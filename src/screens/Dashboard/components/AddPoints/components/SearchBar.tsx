@@ -1,30 +1,55 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, TouchableOpacity, TextInput} from 'react-native';
-import {blackTheme} from '../../../../../assets/colors';
+import {blackTheme, redTheme} from '../../../../../assets/colors';
 import SearchIcon from '../../../../../assets/icons/SearchIcon';
 import DeleteIcon from '../../../../../assets/icons/DeleteIcon';
+import axios from 'axios';
 
 interface SearchBarProps {
-  onHandleStudentIDInput: (input: string) => void;
+  onHandleStudentIDInput: (inputID: string, inputName: string) => void;
+  shouldClear: boolean;
+  onClearFields: () => void;
 }
 
-export const SearchBar = ({onHandleStudentIDInput}: SearchBarProps) => {
+export const SearchBar = ({
+  onHandleStudentIDInput,
+  shouldClear,
+  onClearFields,
+}: SearchBarProps) => {
   const [studentID, setStudentID] = useState('');
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    if (shouldClear) {
+      setStudentID('');
+      onClearFields();
+    }
+  }, [onClearFields, shouldClear]);
 
   const onStudentIDChangeHandler = (input: string) => {
     setStudentID(input);
   };
 
   const submitSearch = () => {
-    onHandleStudentIDInput(studentID);
+    axios
+      .post(`${process.env.BASE_URL}/api/v1/student/specific`, {studentID})
+      .then(res => {
+        onHandleStudentIDInput(studentID, res.data.data.StudentName);
+        setIsError(false);
+      })
+      .catch(() => {
+        onHandleStudentIDInput('', '');
+        setIsError(true);
+      });
   };
 
   const clearSearch = () => {
     onStudentIDChangeHandler('');
+    onHandleStudentIDInput('', '');
   };
 
   return (
-    <View style={styles.searchBarContainer}>
+    <View style={[styles.searchBarContainer, isError && styles.onError]}>
       <TouchableOpacity activeOpacity={1} onPress={submitSearch}>
         <SearchIcon />
       </TouchableOpacity>
@@ -35,6 +60,7 @@ export const SearchBar = ({onHandleStudentIDInput}: SearchBarProps) => {
         underlineColorAndroid="transparent"
         value={studentID}
         onChangeText={onStudentIDChangeHandler}
+        keyboardType="numeric"
       />
       <TouchableOpacity activeOpacity={1} onPress={clearSearch}>
         <DeleteIcon />
@@ -59,5 +85,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 8,
     borderColor: blackTheme,
+  },
+  onError: {
+    borderColor: redTheme,
   },
 });

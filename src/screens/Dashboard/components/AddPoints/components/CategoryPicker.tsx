@@ -1,9 +1,17 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {blackTheme, disabledTheme} from '../../../../../assets/colors';
+import {blackTheme} from '../../../../../assets/colors';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export const CategoryPicker = () => {
+interface CategoryPickerProps {
+  onHandleCategoryIDInput: (inputCategoryID: string | null) => void;
+  shouldClear: boolean;
+}
+
+export const CategoryPicker = ({
+  onHandleCategoryIDInput,
+  shouldClear,
+}: CategoryPickerProps) => {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
     {label: 'Cardboard', value: 'CT001'},
@@ -12,7 +20,17 @@ export const CategoryPicker = () => {
     {label: 'Paper', value: 'CT004'},
     {label: 'Plastic', value: 'CT005'},
   ]);
-  const [value, setValue] = useState(items.length > 0 ? items[0].value : null);
+  const [value, setValue] = useState<string | null>(null);
+
+  const onCategoryIDChangeHandler = (selectedValue: string | null) => {
+    onHandleCategoryIDInput(selectedValue);
+  };
+
+  useEffect(() => {
+    if (shouldClear) {
+      setValue(null);
+    }
+  }, [shouldClear]);
 
   return (
     <View style={styles.categoryPickerOuterContainer}>
@@ -25,7 +43,9 @@ export const CategoryPicker = () => {
         setValue={setValue}
         setItems={setItems}
         listMode="SCROLLVIEW"
+        placeholder="Category"
         textStyle={styles.categoryPickerText}
+        onChangeValue={onCategoryIDChangeHandler}
       />
     </View>
   );

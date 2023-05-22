@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {blackTheme, disabledTheme} from '../../../../../assets/colors';
 
-export const NameField = () => {
-  const [studentName, setStudentName] = useState('');
+interface NameFieldProps {
+  studentName: string;
+}
 
+export const NameField = ({studentName}: NameFieldProps) => {
   return (
     <View style={styles.searchNameContainer}>
       <TextInput

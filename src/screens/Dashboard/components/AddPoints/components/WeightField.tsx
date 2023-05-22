@@ -1,18 +1,38 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StyleSheet, View, TextInput, Text} from 'react-native';
 import {blackTheme, disabledTheme} from '../../../../../assets/colors';
 
-export const WeightField = () => {
-  const [weight, setWeight] = useState('');
+interface WeightFieldProps {
+  onHandleWeightInput: (inputWeight: number) => void;
+  shouldClear: boolean;
+}
+
+export const WeightField = ({
+  onHandleWeightInput,
+  shouldClear,
+}: WeightFieldProps) => {
+  const textInputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    if (shouldClear && textInputRef.current) {
+      textInputRef.current.clear();
+    }
+  }, [shouldClear]);
+
+  const onWeightChangeHandler = (input: string) => {
+    onHandleWeightInput(parseFloat(input));
+  };
+
   return (
     <View style={styles.weightContainer}>
       <TextInput
+        ref={textInputRef}
         style={styles.weightInput}
         placeholder="0.00"
         placeholderTextColor="#000"
         underlineColorAndroid="transparent"
-        value={weight.toString()}
-        //onChangeText={onStudentIDChangeHandler}
+        keyboardType="numeric"
+        onChangeText={onWeightChangeHandler}
       />
       <View style={styles.weightSide}>
         <Text style={styles.weightText}>KG</Text>
