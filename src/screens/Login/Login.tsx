@@ -15,21 +15,17 @@ import {
   redTheme,
   navigationTheme,
 } from './../../assets/colors';
-import Email from './../../assets/icons/Email';
-import Lock from './../../assets/icons/Lock';
+import Email from './../../assets/icons/EmailIcon';
+import Lock from './../../assets/icons/LockIcon';
 import TextFieldArea from './Components/TextFieldArea';
 import axios, {AxiosResponse} from 'axios';
-import {
-  clearUserToken,
-  setUserToken,
-  setUserData,
-} from '../../redux/reducers/authReducer';
+import {clearUserData, setUserData} from '../../redux/reducers/authReducer';
 import {RootState, store} from '../../redux/store';
 import {useSelector} from 'react-redux';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Login = ({navigation}: any) => {
-  //store.dispatch(clearUserToken()); //this is just here for ease of debugging, delete this later in production
+  //store.dispatch(clearUserData()); //this is just here for ease of debugging, delete this later in production
   const token = useSelector((state: RootState) => state.auth.Token);
   useEffect(() => {
     if (token) {
@@ -91,25 +87,8 @@ const Login = ({navigation}: any) => {
   };
 
   const handleSetUserData = (res: AxiosResponse<any, any>) => {
-    const stationID = res.data.data.StationID;
-    const adminName = res.data.data.AdminName;
-    const adminEmail = res.data.data.AdminEmail;
+    store.dispatch(setUserData(res.data.data));
 
-    axios
-      .get(`${process.env.BASE_URL}/api/v1/station/${stationID}`)
-      .then(stationRes => {
-        const stationName = stationRes.data.data[0].BuildingName;
-        store.dispatch(
-          setUserData({
-            name: adminName,
-            email: adminEmail,
-            station: stationName,
-          }),
-        );
-      })
-      .catch(err => {
-        console.log(err);
-      });
     setError(false);
     setLoading(false);
   };
@@ -137,11 +116,11 @@ const Login = ({navigation}: any) => {
           password,
         },
         {
-          timeout: 2000,
+          timeout: 10000,
         },
       )
       .then(res => {
-        store.dispatch(setUserToken(res.data.data.Token));
+        //store.dispatch(setUserToken(res.data.data.Token));
         handleSetUserData(res);
       })
       .catch(err => {

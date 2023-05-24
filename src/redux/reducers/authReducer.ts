@@ -1,16 +1,24 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 interface AuthState {
-  name: string;
-  email: string;
-  station: string;
+  AdminID: string;
+  AdminName: string;
+  AdminEmail: string;
+  AdminPassword: string;
+  PasswordSalt: string;
+  StationName: string;
+  StationID: string;
   Token: string | null;
 }
 
 const initialState: AuthState = {
-  name: '',
-  email: '',
-  station: '',
+  AdminID: '',
+  AdminName: '',
+  AdminEmail: '',
+  AdminPassword: '',
+  PasswordSalt: '',
+  StationName: '',
+  StationID: '',
   Token: null,
 };
 
@@ -18,27 +26,21 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUserToken: (state, action: PayloadAction<string>) => {
-      state.Token = action.payload;
+    setUserData: (state, action: PayloadAction<AuthState>) => {
+      state.Token = action.payload.Token;
+      state.AdminID = action.payload.AdminID;
+      state.AdminName = action.payload.AdminName;
+      state.AdminEmail = action.payload.AdminEmail;
+      state.AdminPassword = action.payload.AdminPassword;
+      state.PasswordSalt = action.payload.PasswordSalt;
+      state.StationName = action.payload.StationName;
+      state.StationID = action.payload.StationID;
     },
-    clearUserToken: state => {
-      state.Token = null;
-    },
-    setUserData: (
-      state,
-      action: PayloadAction<{name: string; email: string; station: string}>,
-    ) => {
-      state.name = action.payload.name;
-      state.email = action.payload.email;
-      state.station = action.payload.station;
-    },
-    clearUserData: state => {
-      state.name = '';
-      state.email = '';
-      state.station = '';
+    clearUserData: () => {
+      return initialState;
     },
   },
 });
 
-export const {setUserToken, clearUserToken, setUserData} = authSlice.actions;
+export const {setUserData, clearUserData} = authSlice.actions;
 export default authSlice.reducer;

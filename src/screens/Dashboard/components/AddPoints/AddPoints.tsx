@@ -5,11 +5,11 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 import {
   blackTheme,
   disabledGreenTheme,
+  errorRedTheme,
   greenTheme,
   shadowColorTheme,
 } from '../../../../assets/colors';
@@ -17,32 +17,40 @@ import {SearchBar} from './components/SearchBar';
 import {NameField} from './components/NameField';
 import {CategoryPicker} from './components/CategoryPicker';
 import {WeightField} from './components/WeightField';
+import axios from 'axios';
+import {useSelector} from 'react-redux';
+import {RootState} from 'src/redux/store';
 
-export const AddPoints = () => {
-  const [isLoading, setLoading] = useState(false);
+interface AddPointsProps {
+  onHandleLoading: (inputBoolean: boolean) => void;
+  onHandleError: (inputBoolean: boolean) => void;
+  onHandleSuccess: (inputBoolean: boolean) => void;
+}
+
+export const AddPoints = ({
+  onHandleLoading,
+  onHandleError,
+  onHandleSuccess,
+}: AddPointsProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [studentID, setStudentID] = useState('');
   const [studentName, setStudentName] = useState('');
   const [categoryID, setCategoryID] = useState<string | null>(null);
-  const [weight, setWeight] = useState(0);
+  const [itemWeight, setItemWeight] = useState(0);
   const [shouldClear, setShouldClear] = useState(false);
+
+  const stationID = useSelector((state: RootState) => state.auth.StationID);
 
   const isFieldEmpty =
     studentID === '' ||
     studentName === '' ||
     categoryID === null ||
-    weight === 0;
+    itemWeight === 0 ||
+    Number.isNaN(itemWeight);
 
   const onHandleStudentIDInput = (inputID: string, inputName: string) => {
     setStudentID(inputID);
     setStudentName(inputName);
-  };
-
-  const onHandleWeightInput = (inputWeight: number) => {
-    setWeight(inputWeight);
-  };
-
-  const onHandleCategoryIDInput = (inputCategoryID: string | null) => {
-    setCategoryID(inputCategoryID);
   };
 
   const onClearFields = () => {
@@ -53,8 +61,32 @@ export const AddPoints = () => {
     setShouldClear(true);
     setStudentName('');
 
-    //call axios here
-    //setLoading(true);
+    console.log(studentID, categoryID, stationID, itemWeight);
+
+    onHandleLoading(true);
+    setIsLoading(true);
+    axios
+      .post(
+        `${process.env.BASE_URL}/api/v1/recycle`,
+        {
+          studentID,
+          categoryID,
+          stationID,
+          itemWeight,
+        },
+        {
+          timeout: 10000,
+        },
+      )
+      .then(res => {
+        console.log(res);
+        onHandleSuccess(true);
+      })
+      .catch(err => {
+        console.log(err);
+        onHandleError(true);
+      });
+    setIsLoading(false);
   };
 
   return (
@@ -70,11 +102,11 @@ export const AddPoints = () => {
           <NameField studentName={studentName} />
           <View style={styles.recycleDetail}>
             <CategoryPicker
-              onHandleCategoryIDInput={onHandleCategoryIDInput}
+              onHandleCategoryIDInput={setCategoryID}
               shouldClear={shouldClear}
             />
             <WeightField
-              onHandleWeightInput={onHandleWeightInput}
+              onHandleWeightInput={setItemWeight}
               shouldClear={shouldClear}
             />
           </View>
@@ -85,11 +117,7 @@ export const AddPoints = () => {
             ]}
             onPress={sendRequest}
             disabled={isLoading || isFieldEmpty}>
-            {isLoading ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
-              <Text style={styles.sendRequestText}>Send Request</Text>
-            )}
+            <Text style={styles.sendRequestText}>Send Request</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -151,5 +179,8 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: disabledGreenTheme,
+  },
+  errorButton: {
+    backgroundColor: errorRedTheme,
   },
 });

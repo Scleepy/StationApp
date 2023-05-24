@@ -69,5 +69,6 @@ const styles = StyleSheet.create({
   categoryPickerText: {
     fontFamily: 'Poppins-SemiBold',
     marginLeft: 5,
+    color: blackTheme,
   },
 });

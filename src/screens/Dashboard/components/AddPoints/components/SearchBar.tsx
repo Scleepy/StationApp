@@ -26,14 +26,12 @@ export const SearchBar = ({
     }
   }, [onClearFields, shouldClear]);
 
-  const onStudentIDChangeHandler = (input: string) => {
-    setStudentID(input);
-  };
-
   const submitSearch = () => {
+    console.log(`${process.env.BASE_URL}/api/v1/student/specific`);
     axios
       .post(`${process.env.BASE_URL}/api/v1/student/specific`, {studentID})
       .then(res => {
+        console.log(res);
         onHandleStudentIDInput(studentID, res.data.data.StudentName);
         setIsError(false);
       })
@@ -44,7 +42,7 @@ export const SearchBar = ({
   };
 
   const clearSearch = () => {
-    onStudentIDChangeHandler('');
+    setStudentID('');
     onHandleStudentIDInput('', '');
   };
 
@@ -56,11 +54,12 @@ export const SearchBar = ({
       <TextInput
         style={styles.searchInput}
         placeholder="Search NIM"
-        placeholderTextColor="#000"
+        placeholderTextColor={blackTheme}
         underlineColorAndroid="transparent"
         value={studentID}
-        onChangeText={onStudentIDChangeHandler}
+        onChangeText={setStudentID}
         keyboardType="numeric"
+        onSubmitEditing={() => submitSearch()}
       />
       <TouchableOpacity activeOpacity={1} onPress={clearSearch}>
         <DeleteIcon />

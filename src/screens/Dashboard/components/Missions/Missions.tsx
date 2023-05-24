@@ -7,7 +7,7 @@ import axios from 'axios';
 
 interface MissionData {
   MissionID: string;
-  ItemAmount: number;
+  ItemWeight: number;
   CategoryName: string;
 }
 
@@ -18,12 +18,13 @@ export const Missions = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(`${process.env.BASE_URL}/api/v1/daily-mission`);
     const fetchMissions = async () => {
       try {
         const response = await axios.get(
           `${process.env.BASE_URL}/api/v1/daily-mission`,
           {
-            timeout: 2000,
+            timeout: 10000,
           },
         );
         setFirstMission(response.data.data[0]);

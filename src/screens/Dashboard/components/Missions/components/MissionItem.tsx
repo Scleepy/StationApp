@@ -8,7 +8,7 @@ import {
 
 interface MissionData {
   MissionID: string;
-  ItemAmount: number;
+  ItemWeight: number;
   CategoryName: string;
 }
 
@@ -20,7 +20,7 @@ export const MissionItem = ({missionData}: MissionDataProps) => {
   return (
     <View style={styles.missionItem}>
       <Text style={styles.missionText}>
-        Recycle {missionData?.ItemAmount} {missionData?.CategoryName}(s)
+        Recycle {missionData?.ItemWeight} Kg {missionData?.CategoryName}
       </Text>
       <View style={styles.missionItemSide} />
     </View>

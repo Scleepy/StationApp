@@ -12,7 +12,7 @@ export const NameField = ({studentName}: NameFieldProps) => {
       <TextInput
         style={styles.nameInput}
         placeholder="Name"
-        placeholderTextColor="#000"
+        placeholderTextColor={blackTheme}
         value={studentName}
         editable={false}
       />
