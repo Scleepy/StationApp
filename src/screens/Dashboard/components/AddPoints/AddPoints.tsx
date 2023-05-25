@@ -40,6 +40,7 @@ export const AddPoints = ({
   const [shouldClear, setShouldClear] = useState(false);
 
   const stationID = useSelector((state: RootState) => state.auth.StationID);
+  const adminID = useSelector((state: RootState) => state.auth.AdminID);
 
   const isFieldEmpty =
     studentID === '' ||
@@ -58,6 +59,8 @@ export const AddPoints = ({
   };
 
   const sendRequest = () => {
+    console.log(`${process.env.BASE_URL}/api/v1/recycle`);
+
     setShouldClear(true);
     setStudentName('');
 
@@ -65,12 +68,14 @@ export const AddPoints = ({
 
     onHandleLoading(true);
     setIsLoading(true);
+
     axios
       .post(
         `${process.env.BASE_URL}/api/v1/recycle`,
         {
           studentID,
           categoryID,
+          adminID,
           stationID,
           itemWeight,
         },
@@ -79,7 +84,7 @@ export const AddPoints = ({
         },
       )
       .then(res => {
-        console.log(res);
+        console.log(res.data.data);
         onHandleSuccess(true);
       })
       .catch(err => {

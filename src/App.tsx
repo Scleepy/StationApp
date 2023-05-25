@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -18,7 +18,7 @@ import Profile from './screens/Profile/Profile';
 
 const Stack = createNativeStackNavigator();
 
-const MainScreen = ({navigation}: any) => {
+const MainScreen = () => {
   const Tab = createBottomTabNavigator();
 
   const RenderHomeIcon = useCallback(({focused}: {focused: boolean}) => {
@@ -44,7 +44,7 @@ const MainScreen = ({navigation}: any) => {
           position: 'absolute',
         },
         headerTitleStyle: {
-          fontSize: 20,
+          fontSize: 24,
           fontFamily: 'Poppins-SemiBold',
           marginTop: 20,
         },
@@ -70,7 +70,7 @@ const MainScreen = ({navigation}: any) => {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="User Profile"
         component={Profile}
         options={{
           tabBarIcon: RenderProfileIcon,

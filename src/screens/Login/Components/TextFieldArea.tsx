@@ -1,7 +1,7 @@
 import React from 'react';
 import {SvgProps} from 'react-native-svg';
 import {Text, StyleSheet, View, TextInput} from 'react-native';
-import {greyTheme} from './../../../assets/colors';
+import {darkGreyTheme} from './../../../assets/colors';
 
 interface TextFieldAreaProps {
   fieldHeader: string;
@@ -31,7 +31,7 @@ const TextFieldArea = ({
           style={styles.fieldTextArea}
           placeholder={placeholderText}
           underlineColorAndroid="transparent"
-          placeholderTextColor={greyTheme}
+          placeholderTextColor={darkGreyTheme}
           secureTextEntry={isPassword}
           onChangeText={onChangeHandler}
         />

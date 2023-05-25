@@ -6,7 +6,7 @@ interface AuthState {
   AdminEmail: string;
   AdminPassword: string;
   PasswordSalt: string;
-  StationName: string;
+  BuildingName: string;
   StationID: string;
   Token: string | null;
 }
@@ -17,7 +17,7 @@ const initialState: AuthState = {
   AdminEmail: '',
   AdminPassword: '',
   PasswordSalt: '',
-  StationName: '',
+  BuildingName: '',
   StationID: '',
   Token: null,
 };
@@ -33,7 +33,7 @@ const authSlice = createSlice({
       state.AdminEmail = action.payload.AdminEmail;
       state.AdminPassword = action.payload.AdminPassword;
       state.PasswordSalt = action.payload.PasswordSalt;
-      state.StationName = action.payload.StationName;
+      state.BuildingName = action.payload.BuildingName;
       state.StationID = action.payload.StationID;
     },
     clearUserData: () => {

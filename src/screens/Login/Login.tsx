@@ -12,20 +12,19 @@ import {
 import {
   backgroundTheme,
   greenTheme,
-  redTheme,
   navigationTheme,
+  errorRedTheme,
 } from './../../assets/colors';
 import Email from './../../assets/icons/EmailIcon';
 import Lock from './../../assets/icons/LockIcon';
 import TextFieldArea from './Components/TextFieldArea';
 import axios, {AxiosResponse} from 'axios';
-import {clearUserData, setUserData} from '../../redux/reducers/authReducer';
+import {setUserData} from '../../redux/reducers/authReducer';
 import {RootState, store} from '../../redux/store';
 import {useSelector} from 'react-redux';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const Login = ({navigation}: any) => {
-  //store.dispatch(clearUserData()); //this is just here for ease of debugging, delete this later in production
   const token = useSelector((state: RootState) => state.auth.Token);
   useEffect(() => {
     if (token) {
@@ -120,7 +119,6 @@ const Login = ({navigation}: any) => {
         },
       )
       .then(res => {
-        //store.dispatch(setUserToken(res.data.data.Token));
         handleSetUserData(res);
       })
       .catch(err => {
@@ -141,14 +139,14 @@ const Login = ({navigation}: any) => {
         {isError && <Text style={styles.warningText}>{warningText}</Text>}
         <TextFieldArea
           fieldHeader={'Email'}
-          placeholderText={'User@binus.ac.id'}
+          placeholderText={'user@binus.ac.id'}
           FieldIcon={Email}
           isPassword={false}
           onHandleInput={handleEmailTextChange}
         />
         <TextFieldArea
           fieldHeader={'Password'}
-          placeholderText={'Password'}
+          placeholderText={'password'}
           FieldIcon={Lock}
           isPassword={true}
           onHandleInput={handlePasswordTextChange}
@@ -214,7 +212,7 @@ const styles = StyleSheet.create({
   },
   warningText: {
     fontFamily: 'Poppins-SemiBold',
-    color: redTheme,
+    color: errorRedTheme,
     fontSize: 12,
   },
 });

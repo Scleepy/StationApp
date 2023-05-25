@@ -27,9 +27,10 @@ export const SearchBar = ({
   }, [onClearFields, shouldClear]);
 
   const submitSearch = () => {
-    console.log(`${process.env.BASE_URL}/api/v1/student/specific`);
+    console.log(`${process.env.BASE_URL}/api/v1/student`);
+
     axios
-      .post(`${process.env.BASE_URL}/api/v1/student/specific`, {studentID})
+      .get(`${process.env.BASE_URL}/api/v1/student/${studentID}`)
       .then(res => {
         console.log(res);
         onHandleStudentIDInput(studentID, res.data.data.StudentName);
