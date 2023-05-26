@@ -5,10 +5,18 @@ import {AddPoints} from './components/AddPoints/AddPoints';
 import {Missions} from './components/Missions/Missions';
 import {CustomModal} from './components/CustomModal/CustomModal';
 
-const Dashboard = () => {
+interface RenderDashboardProps {
+  onRecycleHistoryChange: () => void;
+}
+
+const Dashboard = ({onRecycleHistoryChange}: RenderDashboardProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  if (isSuccess) {
+    onRecycleHistoryChange();
+  }
 
   return (
     <View style={styles.outerContainer}>

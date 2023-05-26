@@ -32,7 +32,6 @@ export const SearchBar = ({
     axios
       .get(`${process.env.BASE_URL}/api/v1/student/${studentID}`)
       .then(res => {
-        console.log(res);
         onHandleStudentIDInput(studentID, res.data.data.StudentName);
         setIsError(false);
       })

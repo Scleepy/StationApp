@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -33,6 +33,31 @@ const MainScreen = () => {
     return <ProfileIcon color={focused ? blackTheme : greyTheme} />;
   }, []);
 
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+
+  const onRecycleHistoryChangeHandler = useCallback(() => {
+    setShouldRefresh(true);
+  }, []);
+
+  const resetShouldRefresh = () => {
+    setShouldRefresh(false);
+  };
+
+  const RenderDashboard = useCallback(
+    () => <Dashboard onRecycleHistoryChange={onRecycleHistoryChangeHandler} />,
+    [onRecycleHistoryChangeHandler],
+  );
+
+  const RenderHistory = useCallback(
+    () => (
+      <History
+        shouldRefresh={shouldRefresh}
+        resetShouldRefresh={resetShouldRefresh}
+      />
+    ),
+    [shouldRefresh],
+  );
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -55,7 +80,7 @@ const MainScreen = () => {
       }}>
       <Tab.Screen
         name="Dashboard"
-        component={Dashboard}
+        component={RenderDashboard}
         options={{
           tabBarIcon: RenderHomeIcon,
           tabBarShowLabel: false,
@@ -63,7 +88,7 @@ const MainScreen = () => {
       />
       <Tab.Screen
         name="History"
-        component={History}
+        component={RenderHistory}
         options={{
           tabBarIcon: RenderHistoryIcon,
           tabBarShowLabel: false,

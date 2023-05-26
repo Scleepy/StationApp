@@ -83,8 +83,7 @@ export const AddPoints = ({
           timeout: 10000,
         },
       )
-      .then(res => {
-        console.log(res.data.data);
+      .then(() => {
         onHandleSuccess(true);
       })
       .catch(err => {

@@ -1,13 +1,20 @@
 import {StyleSheet, View, StatusBar, FlatList, Text} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import {backgroundTheme, blackTheme} from '../../assets/colors';
 import {useRecycleHistoryData} from '../../redux/hooks/recycleHistoryHook';
 import {RecycleHistoryItem} from './components/RecycleHistoryItem';
 
-const History = () => {
-  const [recycleHistory, setRecycleHistory] = useState(
-    useRecycleHistoryData().recycleHistory,
-  );
+interface HistoryProps {
+  shouldRefresh: boolean;
+  resetShouldRefresh: () => void;
+}
+
+const History = ({shouldRefresh, resetShouldRefresh}: HistoryProps) => {
+  useEffect(() => {
+    if (shouldRefresh) {
+      resetShouldRefresh();
+    }
+  }, [resetShouldRefresh, shouldRefresh]);
 
   return (
     <View style={styles.outerContainer}>
@@ -16,7 +23,7 @@ const History = () => {
       <FlatList
         style={styles.recycleHistoryContainer}
         contentContainerStyle={styles.recycleHistoryContainerAlignment}
-        data={recycleHistory}
+        data={useRecycleHistoryData().recycleHistory}
         renderItem={({item}) => {
           return <RecycleHistoryItem RecycleHistoryData={item} />;
         }}
