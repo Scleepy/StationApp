@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, StatusBar, ScrollView} from 'react-native';
 import {backgroundTheme, blackTheme} from './../../assets/colors';
 import {AddPoints} from './components/AddPoints/AddPoints';
@@ -14,9 +14,11 @@ const Dashboard = ({onRecycleHistoryChange}: RenderDashboardProps) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  if (isSuccess) {
-    onRecycleHistoryChange();
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      onRecycleHistoryChange();
+    }
+  }, [isSuccess, onRecycleHistoryChange]);
 
   return (
     <View style={styles.outerContainer}>

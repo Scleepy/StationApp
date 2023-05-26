@@ -39,24 +39,22 @@ const MainScreen = () => {
     setShouldRefresh(true);
   }, []);
 
-  const resetShouldRefresh = () => {
+  const resetShouldRefresh = useCallback(() => {
     setShouldRefresh(false);
-  };
+  }, []);
 
-  const RenderDashboard = useCallback(
-    () => <Dashboard onRecycleHistoryChange={onRecycleHistoryChangeHandler} />,
-    [onRecycleHistoryChangeHandler],
-  );
+  const RenderDashboard = useCallback(() => {
+    return <Dashboard onRecycleHistoryChange={onRecycleHistoryChangeHandler} />;
+  }, [onRecycleHistoryChangeHandler]);
 
-  const RenderHistory = useCallback(
-    () => (
+  const RenderHistory = useCallback(() => {
+    return (
       <History
         shouldRefresh={shouldRefresh}
         resetShouldRefresh={resetShouldRefresh}
       />
-    ),
-    [shouldRefresh],
-  );
+    );
+  }, [shouldRefresh, resetShouldRefresh]);
 
   return (
     <Tab.Navigator
