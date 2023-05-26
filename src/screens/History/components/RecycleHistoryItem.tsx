@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   completionInfo: {
     color: blackTheme,
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 14,
+    fontSize: 13,
   },
   completedTime: {
     color: blackTheme,
@@ -96,10 +96,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   recycleHistoryInfoContainer: {
-    width: '55%',
+    width: '52%',
   },
   recycleInfoContainer: {
-    width: '35%',
+    width: '38%',
     backgroundColor: greenTheme,
     borderRadius: 6,
     alignItems: 'center',
@@ -114,5 +114,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Poppins-Medium',
     fontSize: 13,
+    width: '90%',
+    textAlign: 'center',
   },
 });
