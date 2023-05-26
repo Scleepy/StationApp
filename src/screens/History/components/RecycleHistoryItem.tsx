@@ -39,7 +39,7 @@ export const RecycleHistoryItem = ({
             {studentName} ({RecycleHistoryData.StudentID})
           </Text>
           <Text style={styles.completionInfo}>Completed</Text>
-          <Text style={styles.completionInfo}>{recyclingDateTime}</Text>
+          <Text style={styles.completedTime}>{recyclingDateTime}</Text>
         </View>
         <View style={styles.recycleInfoContainer}>
           <Text style={styles.categoryName}>
@@ -70,14 +70,14 @@ const styles = StyleSheet.create({
   },
   recycleHistoryItemSide: {
     height: '100%',
-    width: '5%',
+    width: '4%',
     backgroundColor: greenTheme,
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
   },
   mainInfoContainer: {
     flexDirection: 'row',
-    width: '95%',
+    width: '96%',
     justifyContent: 'space-evenly',
   },
   studentInfoText: {
@@ -89,6 +89,11 @@ const styles = StyleSheet.create({
     color: blackTheme,
     fontFamily: 'Poppins-SemiBold',
     fontSize: 14,
+  },
+  completedTime: {
+    color: blackTheme,
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 13,
   },
   recycleHistoryInfoContainer: {
     width: '55%',
