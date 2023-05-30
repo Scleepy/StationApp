@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, StatusBar, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  StatusBar,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import {backgroundTheme, blackTheme} from './../../assets/colors';
 import {AddPoints} from './components/AddPoints/AddPoints';
 import {Missions} from './components/Missions/Missions';
@@ -13,12 +19,20 @@ const Dashboard = ({onRecycleHistoryChange}: RenderDashboardProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (isSuccess) {
       onRecycleHistoryChange();
     }
   }, [isSuccess, onRecycleHistoryChange]);
+
+  const onHandleRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 500);
+  }, []);
 
   return (
     <View style={styles.outerContainer}>
@@ -27,13 +41,16 @@ const Dashboard = ({onRecycleHistoryChange}: RenderDashboardProps) => {
       ) : (
         <StatusBar backgroundColor={backgroundTheme} barStyle="dark-content" />
       )}
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onHandleRefresh} />
+        }>
         <AddPoints
           onHandleLoading={setIsVisible}
           onHandleError={setIsError}
           onHandleSuccess={setIsSuccess}
         />
-        <Missions />
+        <Missions refreshing={refreshing} />
       </ScrollView>
       <CustomModal
         isVisible={isVisible}

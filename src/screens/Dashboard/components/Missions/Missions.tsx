@@ -11,7 +11,11 @@ interface MissionData {
   CategoryName: string;
 }
 
-export const Missions = () => {
+interface MissionsProps {
+  refreshing: boolean;
+}
+
+export const Missions = ({refreshing}: MissionsProps) => {
   const [firstMission, setFirstMission] = useState<MissionData | null>(null);
   const [secondMission, setSecondMission] = useState<MissionData | null>(null);
   const [thirdMission, setThirdMission] = useState<MissionData | null>(null);
@@ -38,7 +42,7 @@ export const Missions = () => {
     };
 
     fetchMissions();
-  }, []);
+  }, [refreshing]);
 
   return (
     <View style={styles.outerContainerSectionMissions}>
