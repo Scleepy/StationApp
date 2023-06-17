@@ -85,11 +85,15 @@ export const AddPoints = ({
         },
       )
       .then(() => {
-        onHandleSuccess(true);
+        setTimeout(() => {
+          onHandleSuccess(true);
+        }, 500);
       })
       .catch(err => {
         console.log(err);
-        onHandleError(true);
+        setTimeout(() => {
+          onHandleError(true);
+        }, 500);
       });
     setIsLoading(false);
   };
