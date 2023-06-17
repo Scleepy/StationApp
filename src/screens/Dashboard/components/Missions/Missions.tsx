@@ -4,6 +4,7 @@ import {blackTheme} from '../../../../assets/colors';
 import {MissionItem} from './components/MissionItem';
 import {MissionItemLoading} from './components/MissionItemLoading';
 import axios from 'axios';
+import {BASE_URL} from '@env';
 
 interface MissionData {
   MissionID: string;
@@ -22,15 +23,12 @@ export const Missions = ({refreshing}: MissionsProps) => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(`${process.env.BASE_URL}/api/v1/daily-mission`);
+    console.log(`${BASE_URL}/api/v1/daily-mission`);
     const fetchMissions = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.BASE_URL}/api/v1/daily-mission`,
-          {
-            timeout: 10000,
-          },
-        );
+        const response = await axios.get(`${BASE_URL}/api/v1/daily-mission`, {
+          timeout: 10000,
+        });
         setFirstMission(response.data.data[0]);
         setSecondMission(response.data.data[1]);
         setThirdMission(response.data.data[2]);

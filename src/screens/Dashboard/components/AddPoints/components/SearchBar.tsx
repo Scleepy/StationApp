@@ -4,6 +4,7 @@ import {blackTheme, redTheme} from '../../../../../assets/colors';
 import SearchIcon from '../../../../../assets/icons/SearchIcon';
 import DeleteIcon from '../../../../../assets/icons/DeleteIcon';
 import axios from 'axios';
+import {BASE_URL} from '@env';
 
 interface SearchBarProps {
   onHandleStudentIDInput: (inputID: string, inputName: string) => void;
@@ -27,10 +28,10 @@ export const SearchBar = ({
   }, [onClearFields, shouldClear]);
 
   const submitSearch = () => {
-    console.log(`${process.env.BASE_URL}/api/v1/student`);
+    console.log(`${BASE_URL}/api/v1/student`);
 
     axios
-      .get(`${process.env.BASE_URL}/api/v1/student/${studentID}`)
+      .get(`${BASE_URL}/api/v1/student/${studentID}`)
       .then(res => {
         onHandleStudentIDInput(studentID, res.data.data.StudentName);
         setIsError(false);

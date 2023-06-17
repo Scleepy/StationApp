@@ -17,12 +17,13 @@ import {
 } from './../../assets/colors';
 import Email from './../../assets/icons/EmailIcon';
 import Lock from './../../assets/icons/LockIcon';
-import TextFieldArea from './Components/TextFieldArea';
+import TextFieldArea from './components/TextFieldArea';
 import axios, {AxiosResponse} from 'axios';
 import {setUserData} from '../../redux/reducers/authReducer';
 import {RootState, store} from '../../redux/store';
 import {useSelector} from 'react-redux';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import {BASE_URL} from '@env';
 
 const Login = ({navigation}: any) => {
   const token = useSelector((state: RootState) => state.auth.Token);
@@ -109,7 +110,7 @@ const Login = ({navigation}: any) => {
     setLoading(true);
     axios
       .post(
-        `${process.env.BASE_URL}/api/v1/admin/login`,
+        `${BASE_URL}/api/v1/admin/login`,
         {
           email,
           password,

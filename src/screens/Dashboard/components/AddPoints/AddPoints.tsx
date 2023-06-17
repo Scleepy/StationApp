@@ -20,6 +20,7 @@ import {WeightField} from './components/WeightField';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {RootState} from 'src/redux/store';
+import {BASE_URL} from '@env';
 
 interface AddPointsProps {
   onHandleLoading: (inputBoolean: boolean) => void;
@@ -59,7 +60,7 @@ export const AddPoints = ({
   };
 
   const sendRequest = () => {
-    console.log(`${process.env.BASE_URL}/api/v1/recycle`);
+    console.log(`${BASE_URL}/api/v1/recycle`);
 
     setShouldClear(true);
     setStudentName('');
@@ -71,7 +72,7 @@ export const AddPoints = ({
 
     axios
       .post(
-        `${process.env.BASE_URL}/api/v1/recycle`,
+        `${BASE_URL}/api/v1/recycle`,
         {
           studentID,
           categoryID,
