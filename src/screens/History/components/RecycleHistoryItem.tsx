@@ -46,8 +46,8 @@ export const RecycleHistoryItem = ({
             {RecycleHistoryData.CategoryName}
           </Text>
           <Text style={styles.categoryInfo}>
-            {RecycleHistoryData.ItemWeight}Kg -{' '}
-            {RecycleHistoryData.PointsObtained} Points
+            {RecycleHistoryData.ItemWeight.toFixed(2)}Kg -{' '}
+            {RecycleHistoryData.PointsObtained.toFixed(2)} Points
           </Text>
         </View>
       </View>
