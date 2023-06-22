@@ -68,8 +68,8 @@ export const AddPoints = ({
     console.log(studentID, categoryID, stationID, itemWeight);
 
     onHandleLoading(true);
-    setIsLoading(true);
 
+    setIsLoading(true);
     axios
       .post(
         `${BASE_URL}/api/v1/recycle`,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View, Linking} from 'react-native';
 import {blackTheme, greyTheme} from '../../../../assets/colors';
 import ChangePasswordIcon from '../../../../assets/icons/ChangePasswordIcon';
 import SupportIcon from '../../../../assets/icons/SupportIcon';
@@ -8,13 +8,32 @@ import {SettingItem} from './components/SettingItem';
 import {store} from '../../../../redux/store';
 import {clearUserData} from '../../../../redux/reducers/authReducer';
 
-export const SettingSection = ({navigation}: any) => {
+interface SettingSectionModalProps {
+  onHandleModalVisible: (inputBoolean: boolean) => void;
+  navigation: any;
+}
+
+export const SettingSection = ({
+  onHandleModalVisible,
+  navigation,
+}: SettingSectionModalProps) => {
   const changePassword = () => {
     console.log('changePassword');
+    onHandleModalVisible(true);
   };
 
   const supportCenter = () => {
     console.log('supportCenter');
+    const emailAddress = 'mailto:daniel.yohanes@binus.ac.id';
+
+    Linking.canOpenURL(emailAddress).then(valid => {
+      console.log(valid);
+      if (valid) {
+        return Linking.openURL(emailAddress);
+      } else {
+        console.log("Can't handle url:" + emailAddress);
+      }
+    });
   };
 
   const logOut = () => {

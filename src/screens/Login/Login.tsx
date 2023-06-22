@@ -107,13 +107,15 @@ const Login = ({navigation}: any) => {
     if (checkEmptyField() || checkEmail()) {
       return;
     }
+    console.log(`${BASE_URL}/api/v1/admin/login`);
+
     setLoading(true);
     axios
       .post(
         `${BASE_URL}/api/v1/admin/login`,
         {
-          email,
-          password,
+          adminEmail: email,
+          adminPassword: password,
         },
         {
           timeout: 10000,
