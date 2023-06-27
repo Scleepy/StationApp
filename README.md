@@ -4,7 +4,7 @@ StationApp is a mobile application designed to support admins in assisting stude
 In order to use this application, users must set up the BinusRecycleDB Database along with its API. Further explanation can be found in the link: https://github.com/Scleepy/BinusRecycleAPI
 
 ### Setup:
-- Once the prerequisites are met(database & API), you can begin the clone the "main" branch of the repository and run "npm i" run install all the dependencies.
+- Once the prerequisites are met(database & API), you can begin to clone the "main" branch of the repository and run "npm i" run install all the dependencies.
 - The .env file must be configured to your local machine's IP address by opening cmd and running "ipconfig":
 ```
 BASE_URL=http://[IP HERE, DELETE BRACKETS]:3000
