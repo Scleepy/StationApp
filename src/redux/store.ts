@@ -3,12 +3,14 @@ import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authReducer from './reducers/authReducer';
 import recycleHistoryReducer from './reducers/recycleHistoryReducer';
+import baseUrlReducer from './reducers/baseUrlReducer';
 import createSagaMiddleware from 'redux-saga';
 import recycleHistorySaga from './saga/handler/recycleHistorySaga';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   recycleHistory: recycleHistoryReducer,
+  baseUrl: baseUrlReducer,
 });
 
 const persistedReducer = persistReducer(

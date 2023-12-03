@@ -9,6 +9,7 @@ interface AuthState {
   BuildingName: string;
   StationID: string;
   Token: string | null;
+  IsSuperUser: boolean;
 }
 
 const initialState: AuthState = {
@@ -20,6 +21,7 @@ const initialState: AuthState = {
   BuildingName: '',
   StationID: '',
   Token: null,
+  IsSuperUser: false,
 };
 
 const authSlice = createSlice({
@@ -35,6 +37,7 @@ const authSlice = createSlice({
       state.PasswordSalt = action.payload.PasswordSalt;
       state.BuildingName = action.payload.BuildingName;
       state.StationID = action.payload.StationID;
+      state.IsSuperUser = action.payload.IsSuperUser;
     },
     clearUserData: () => {
       return initialState;

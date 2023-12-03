@@ -12,3 +12,4 @@ export const disabledGreenTheme = '#91B2AE';
 export const disabledRedTheme = '#FA9884';
 export const errorRedTheme = '#F45050';
 export const whiteTheme = '#F7F7F7';
+export const lightGreenTheme = '#06A385';

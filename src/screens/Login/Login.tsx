@@ -11,9 +11,10 @@ import {
 } from 'react-native';
 import {
   backgroundTheme,
-  greenTheme,
+  lightGreenTheme,
   navigationTheme,
   errorRedTheme,
+  blackTheme,
 } from './../../assets/colors';
 import Email from './../../assets/icons/EmailIcon';
 import Lock from './../../assets/icons/LockIcon';
@@ -88,7 +89,6 @@ const Login = ({navigation}: any) => {
 
   const handleSetUserData = (res: AxiosResponse<any, any>) => {
     store.dispatch(setUserData(res.data.data));
-
     setError(false);
     setLoading(false);
   };
@@ -132,13 +132,23 @@ const Login = ({navigation}: any) => {
   return (
     <View style={styles.outerContainer}>
       <StatusBar backgroundColor={backgroundTheme} barStyle="dark-content" />
-      <Image source={require('../../assets/Logo.png')} style={styles.logo} />
+      {/* <Image source={require('../../assets/Logo.png')} style={styles.logo} /> */}
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../../assets/images/bloombox-logo.png')}
+          style={styles.logoNew}
+          resizeMode="contain"
+        />
+      </View>
       <View
         style={[
           styles.loginContainer,
           isKeyboardActive && styles.keyboardOnFocus,
         ]}>
-        <Text style={styles.textHeader}>Login</Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.textHeader}>WELCOME</Text>
+          <Text style={styles.subTextHeader}>Sign in to continue</Text>
+        </View>
         {isError && <Text style={styles.warningText}>{warningText}</Text>}
         <TextFieldArea
           fieldHeader={'Email'}
@@ -200,7 +210,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   loginButton: {
-    backgroundColor: greenTheme,
+    backgroundColor: lightGreenTheme,
     alignItems: 'center',
     justifyContent: 'center',
     width: '80%',
@@ -217,6 +227,25 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     color: errorRedTheme,
     fontSize: 12,
+  },
+  logoContainer: {
+    height: '10%',
+    width: '85%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoNew: {
+    width: '100%',
+  },
+  headerContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '20%',
+  },
+  subTextHeader: {
+    fontFamily: 'Poppins-Bold',
+    color: blackTheme,
+    fontSize: 15,
   },
 });
 

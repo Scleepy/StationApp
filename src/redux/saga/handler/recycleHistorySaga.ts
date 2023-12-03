@@ -25,6 +25,7 @@ function* handleGetRecycleHistory() {
     );
 
     const {data: response}: AxiosResponse<ProductResponse> = yield call(
+      
       requestRecycleHistory,
       adminID,
     );

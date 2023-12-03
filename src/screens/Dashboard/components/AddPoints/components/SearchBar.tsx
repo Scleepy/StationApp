@@ -5,6 +5,8 @@ import SearchIcon from '../../../../../assets/icons/SearchIcon';
 import DeleteIcon from '../../../../../assets/icons/DeleteIcon';
 import axios from 'axios';
 import {BASE_URL} from '@env';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../../../redux/store';
 
 interface SearchBarProps {
   onHandleStudentIDInput: (inputID: string, inputName: string) => void;
@@ -27,11 +29,19 @@ export const SearchBar = ({
     }
   }, [onClearFields, shouldClear]);
 
+  const isSuperUser = useSelector((state: RootState) => state.auth.IsSuperUser);
+  const superUserBaseUrl = useSelector(
+    (state: RootState) => state.baseUrl.BaseUrl,
+  );
+
+  const baseUrl = isSuperUser ? superUserBaseUrl : BASE_URL;
+
   const submitSearch = () => {
-    console.log(`${BASE_URL}/api/v1/student`);
+    console.log(`${baseUrl}/api/v1/student`);
+    
 
     axios
-      .get(`${BASE_URL}/api/v1/student/${studentID}`)
+      .get(`${baseUrl}/api/v1/student/${studentID}`)
       .then(res => {
         onHandleStudentIDInput(studentID, res.data.data.StudentName);
         setIsError(false);

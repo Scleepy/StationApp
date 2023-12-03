@@ -5,10 +5,17 @@ import {blackTheme} from '../../../../../assets/colors';
 interface TextFieldProps {
   onHandleTextInput: (text: string) => void;
   placeholder: string;
+  isSecureTextEntry: boolean;
+  editPlaceholder: boolean;
 }
 
-export const TextField = ({onHandleTextInput, placeholder}: TextFieldProps) => {
-  const [text, setText] = useState('');
+export const TextField = ({
+  onHandleTextInput,
+  placeholder,
+  isSecureTextEntry,
+  editPlaceholder,
+}: TextFieldProps) => {
+  const [text, setText] = useState(editPlaceholder ? placeholder : '');
 
   return (
     <View style={styles.textBarContainer}>
@@ -22,7 +29,7 @@ export const TextField = ({onHandleTextInput, placeholder}: TextFieldProps) => {
           setText(currText);
           onHandleTextInput(currText);
         }}
-        secureTextEntry={true}
+        secureTextEntry={isSecureTextEntry}
       />
     </View>
   );

@@ -5,6 +5,8 @@ import {MissionItem} from './components/MissionItem';
 import {MissionItemLoading} from './components/MissionItemLoading';
 import axios from 'axios';
 import {BASE_URL} from '@env';
+import {RootState} from '../../../../redux/store';
+import {useSelector} from 'react-redux';
 
 interface MissionData {
   MissionID: string;
@@ -22,11 +24,20 @@ export const Missions = ({refreshing}: MissionsProps) => {
   const [thirdMission, setThirdMission] = useState<MissionData | null>(null);
   const [isLoading, setLoading] = useState(true);
 
+  const isSuperUser = useSelector((state: RootState) => state.auth.IsSuperUser);
+  const superUserBaseUrl = useSelector(
+    (state: RootState) => state.baseUrl.BaseUrl,
+  );
+
+  const baseUrl = isSuperUser ? superUserBaseUrl : BASE_URL;
+  console.log(baseUrl);
+
   useEffect(() => {
-    console.log(`${BASE_URL}/api/v1/daily-mission`);
+    console.log(`${baseUrl}/api/v1/daily-mission`);
     const fetchMissions = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/v1/daily-mission`, {
+        const response = await axios.get(`${baseUrl}/api/v1/daily-mission`, {
+          
           timeout: 10000,
         });
         setFirstMission(response.data.data[0]);
@@ -40,7 +51,7 @@ export const Missions = ({refreshing}: MissionsProps) => {
     };
 
     fetchMissions();
-  }, [refreshing]);
+  }, [baseUrl, refreshing]);
 
   return (
     <View style={styles.outerContainerSectionMissions}>

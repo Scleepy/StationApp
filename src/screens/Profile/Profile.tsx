@@ -3,13 +3,16 @@ import React, {useState} from 'react';
 import {backgroundTheme, blackTheme} from '../../assets/colors';
 import {UserInfoSection} from './components/UserInfoSection/UserInfoSection';
 import {SettingSection} from './components/SupportSection/SettingSection';
-import {ChangePasswordModal} from './components/ChangePasswordModal/ChangePasswordModal';
+import {ChangePasswordModal} from './components/Modal/ChangePasswordModal';
+import {ChangeIPModal} from './components/Modal/ChangeIPModal';
 
 const Profile = ({navigation}: any) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isModalPasswordVisible, setIsModalPasswordVisible] = useState(false);
+  const [isModalChangeIPVisible, setIsModalChangeIPVisible] = useState(false);
+
   return (
     <View style={styles.outerContainer}>
-      {isVisible ? (
+      {isModalPasswordVisible || isModalChangeIPVisible ? (
         <StatusBar backgroundColor={blackTheme} barStyle="dark-content" />
       ) : (
         <StatusBar backgroundColor={backgroundTheme} barStyle="dark-content" />
@@ -18,13 +21,18 @@ const Profile = ({navigation}: any) => {
         <UserInfoSection />
         <SettingSection
           navigation={navigation}
-          onHandleModalVisible={setIsVisible}
+          onHandleModalChangePasswordVisible={setIsModalPasswordVisible}
+          onHandleModalChangeIPVisible={setIsModalChangeIPVisible}
         />
       </ScrollView>
 
       <ChangePasswordModal
-        isVisible={isVisible}
-        onHandleModalVisible={setIsVisible}
+        isVisible={isModalPasswordVisible}
+        onHandleModalVisible={setIsModalPasswordVisible}
+      />
+      <ChangeIPModal
+        isVisible={isModalChangeIPVisible}
+        onHandleModalVisible={setIsModalChangeIPVisible}
       />
     </View>
   );
@@ -37,5 +45,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: backgroundTheme,
+    paddingBottom: 60,
   },
 });

@@ -4,22 +4,31 @@ import {blackTheme, greyTheme} from '../../../../assets/colors';
 import ChangePasswordIcon from '../../../../assets/icons/ChangePasswordIcon';
 import SupportIcon from '../../../../assets/icons/SupportIcon';
 import LogoutIcon from '../../../../assets/icons/LogoutIcon';
+import EditIPIcon from '../../../../assets/icons/EditIPIcon';
 import {SettingItem} from './components/SettingItem';
-import {store} from '../../../../redux/store';
+import {RootState, store} from '../../../../redux/store';
 import {clearUserData} from '../../../../redux/reducers/authReducer';
+import {useSelector} from 'react-redux';
 
 interface SettingSectionModalProps {
-  onHandleModalVisible: (inputBoolean: boolean) => void;
+  onHandleModalChangePasswordVisible: (inputBoolean: boolean) => void;
+  onHandleModalChangeIPVisible: (inputBoolean: boolean) => void;
   navigation: any;
 }
 
 export const SettingSection = ({
-  onHandleModalVisible,
+  onHandleModalChangePasswordVisible,
+  onHandleModalChangeIPVisible,
   navigation,
 }: SettingSectionModalProps) => {
   const changePassword = () => {
     console.log('changePassword');
-    onHandleModalVisible(true);
+    onHandleModalChangePasswordVisible(true);
+  };
+
+  const editIP = () => {
+    console.log('changePassword');
+    onHandleModalChangeIPVisible(true);
   };
 
   const supportCenter = () => {
@@ -42,6 +51,9 @@ export const SettingSection = ({
     store.dispatch(clearUserData());
   };
 
+  const isSuperUser = useSelector((state: RootState) => state.auth.IsSuperUser);
+  console.log(isSuperUser);
+
   return (
     <View style={styles.settingsContainer}>
       <View style={styles.innerSettingsContainer}>
@@ -62,6 +74,16 @@ export const SettingSection = ({
           supportText={'Log Out'}
           action={logOut}
         />
+        {isSuperUser && (
+          <>
+            <View style={styles.divider} />
+            <SettingItem
+              Icon={EditIPIcon}
+              supportText={'Admin Operations'}
+              action={editIP}
+            />
+          </>
+        )}
       </View>
     </View>
   );

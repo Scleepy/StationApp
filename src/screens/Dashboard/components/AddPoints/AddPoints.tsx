@@ -59,8 +59,16 @@ export const AddPoints = ({
     setShouldClear(false);
   };
 
+  const isSuperUser = useSelector((state: RootState) => state.auth.IsSuperUser);
+  const superUserBaseUrl = useSelector(
+    (state: RootState) => state.baseUrl.BaseUrl,
+  );
+
+  const baseUrl = isSuperUser ? superUserBaseUrl : BASE_URL;
+
   const sendRequest = () => {
-    console.log(`${BASE_URL}/api/v1/recycle`);
+    console.log(`${baseUrl}/api/v1/recycle`);
+    
 
     setShouldClear(true);
     setStudentName('');
@@ -72,7 +80,7 @@ export const AddPoints = ({
     setIsLoading(true);
     axios
       .post(
-        `${BASE_URL}/api/v1/recycle`,
+        `${baseUrl}/api/v1/recycle`,
         {
           studentID,
           categoryID,

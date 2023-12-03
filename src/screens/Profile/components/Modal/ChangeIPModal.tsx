@@ -7,53 +7,65 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 import {
   blackTheme,
-  disabledRedTheme,
   errorRedTheme,
   redTheme,
   whiteTheme,
 } from '../../../../assets/colors';
 import {TextField} from './components/TextField';
 import {useSelector} from 'react-redux';
-import {RootState} from '../../../../redux/store';
-import axios from 'axios';
+import {RootState, store} from '../../../../redux/store';
+import {
+  BaseUrlState,
+  setBaseUrl,
+} from '../../../../redux/reducers/baseUrlReducer';
 import {BASE_URL} from '@env';
+
+import axios from 'axios';
 
 interface ChangePasswordModalProps {
   isVisible: boolean;
   onHandleModalVisible: (inputBoolean: boolean) => void;
 }
 
-export const ChangePasswordModal = ({
+export const ChangeIPModal = ({
   isVisible,
   onHandleModalVisible,
 }: ChangePasswordModalProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setError] = useState(false);
+  const originalAddress = useSelector(
+    (state: RootState) => state.baseUrl.BaseUrl,
+  ).replace(/^https?:\/\//, '');
+
   const [errorText, setErrorText] = useState('');
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
-
-  const adminEmail = useSelector((state: RootState) => state.auth.AdminEmail);
-
-  const isFieldEmpty =
-    oldPassword === '' || newPassword === '' || confirmNewPassword === '';
-  console.log(isFieldEmpty);
+  const [isError, setError] = useState(false);
+  const [ipAddress, setIpAddress] = useState(originalAddress);
 
   const handleModalClose = () => {
-    if (!isLoading) {
-      onHandleModalVisible(false);
-      setError(false);
-      setErrorText('');
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmNewPassword('');
+    onHandleModalVisible(false);
+    setError(false);
+    setIpAddress(originalAddress);
+  };
+
+  const checkIsValid = () => {
+    const ipAddressRegex = /\b(?:\d{1,3}\.){3}\d{1,3}:3000\b/;
+    if (!ipAddressRegex.test(ipAddress)) {
+      setErrorText('Must be a valid IP address');
+      setError(true);
+    } else {
+      setErrorText('IP changed successfully');
+      setError(true);
+      changeIPAddress();
     }
   };
+
+  const isSuperUser = useSelector((state: RootState) => state.auth.IsSuperUser);
+  const superUserBaseUrl = useSelector(
+    (state: RootState) => state.baseUrl.BaseUrl,
+  );
+
+  const baseUrl = isSuperUser ? superUserBaseUrl : BASE_URL;
 
   const handleResponseError = (err: any) => {
     if (err.code !== 'ECONNABORTED') {
@@ -62,32 +74,19 @@ export const ChangePasswordModal = ({
       setErrorText('Server error, please try again later');
     }
     setError(true);
-    setIsLoading(false);
   };
 
   const handleResponseSuccess = () => {
-    setErrorText('Password changed successfully');
+    setErrorText('Daily reset successfully');
     setError(true);
-    setIsLoading(false);
   };
 
-  const changePassword = () => {
-    console.log(`${BASE_URL}/api/v1/admin/update-password`);
-
-    setIsLoading(true);
+  const resetDaily = () => {
+    console.log(`${baseUrl}/api/v1/daily-mission/reset-daily`);
     axios
-      .post(
-        `${BASE_URL}/api/v1/admin/update-password`,
-        {
-          adminEmail,
-          oldPassword,
-          newPassword,
-          confirmNewPassword,
-        },
-        {
-          timeout: 10000,
-        },
-      )
+      .get(`${baseUrl}/api/v1/daily-mission/reset-daily`, {
+        timeout: 10000,
+      })
       .then(res => {
         console.log(res);
         handleResponseSuccess();
@@ -98,6 +97,15 @@ export const ChangePasswordModal = ({
       });
   };
 
+  const changeIPAddress = () => {
+    const newIpAddress: BaseUrlState = {
+      BaseUrl: ipAddress,
+    };
+    store.dispatch(setBaseUrl(newIpAddress));
+  };
+
+  console.log(originalAddress);
+
   return (
     <Modal visible={isVisible} transparent={true}>
       <TouchableOpacity
@@ -107,31 +115,17 @@ export const ChangePasswordModal = ({
         <TouchableWithoutFeedback>
           <View style={styles.modalContainer}>
             <View style={styles.innerModalContainer}>
-              <View style={styles.changePasswordModalHeader}>
-                <Text style={styles.modalText}>Change Password</Text>
+              <View style={styles.changeIPModalHeader}>
+                <Text style={styles.modalText}>Change IP Address</Text>
               </View>
               <View style={styles.fieldContainer}>
                 <View style={styles.textField}>
-                  <Text style={styles.textFieldHeader}>Old Password</Text>
+                  <Text style={styles.textFieldHeader}>IP Address</Text>
                   <TextField
-                    onHandleTextInput={setOldPassword}
-                    placeholder={'Old Password'}
-                  />
-                </View>
-                <View style={styles.textField}>
-                  <Text style={styles.textFieldHeader}>New Password</Text>
-                  <TextField
-                    onHandleTextInput={setNewPassword}
-                    placeholder={'New Password'}
-                  />
-                </View>
-                <View style={styles.textField}>
-                  <Text style={styles.textFieldHeader}>
-                    Confirm New Password
-                  </Text>
-                  <TextField
-                    onHandleTextInput={setConfirmNewPassword}
-                    placeholder={'Confirm New Password'}
+                    onHandleTextInput={setIpAddress}
+                    placeholder={ipAddress}
+                    isSecureTextEntry={false}
+                    editPlaceholder={true}
                   />
                 </View>
               </View>
@@ -141,17 +135,14 @@ export const ChangePasswordModal = ({
                 </View>
               )}
               <TouchableOpacity
-                style={[
-                  styles.changePasswordButton,
-                  isFieldEmpty && styles.disabledButton,
-                ]}
-                onPress={changePassword}
-                disabled={isLoading || isFieldEmpty}>
-                {isLoading ? (
-                  <ActivityIndicator size="small" color="white" />
-                ) : (
-                  <Text style={styles.changePasswordText}>Change Password</Text>
-                )}
+                style={[styles.changeIPButton]}
+                onPress={checkIsValid}>
+                <Text style={styles.changeIPText}>Edit IP Address</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.changeIPButton]}
+                onPress={resetDaily}>
+                <Text style={styles.changeIPText}>Reset Daily Mission</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -173,7 +164,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: whiteTheme,
-    height: screenHeight * 0.6,
+    height: screenHeight * 0.45,
     width: screenWidth * 0.85,
     borderRadius: 10,
     alignItems: 'center',
@@ -184,36 +175,33 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: blackTheme,
   },
-  onLoading: {
-    borderRadius: 20,
-  },
   innerModalContainer: {
     height: '85%',
     width: '80%',
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
-  changePasswordModalHeader: {
+  changeIPModalHeader: {
     alignContent: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     width: '95%',
-    height: '12%',
+    height: '20%',
   },
   fieldContainer: {
-    height: '62%',
-    justifyContent: 'space-between',
+    height: '20%',
+    justifyContent: 'center',
   },
-  changePasswordButton: {
+  changeIPButton: {
     backgroundColor: redTheme,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: '13%',
+    height: 50,
     borderRadius: 8,
     zIndex: -1,
   },
-  changePasswordText: {
+  changeIPText: {
     fontFamily: 'Poppins-SemiBold',
     color: 'white',
     fontSize: 14,
@@ -225,9 +213,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 14,
     color: blackTheme,
-  },
-  disabledButton: {
-    backgroundColor: disabledRedTheme,
   },
   warningField: {
     height: '10%',
